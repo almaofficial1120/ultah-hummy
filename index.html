@@ -330,6 +330,9 @@
 </head>
 <body class="min-h-screen text-slate-800 relative selection:bg-rose-200 selection:text-rose-900">
 
+    <!-- Pemutar Musik Latar Custom (Gunakan file musik.mp3 di folder yang sama) -->
+    <audio id="bg-music" src="musik.mp3" loop preload="auto"></audio>
+
     <!-- Canvas Kembang Api Kejutan -->
     <canvas id="fireworks-canvas"></canvas>
 
@@ -945,11 +948,13 @@
         ];
 
         let isMusicPlaying = false;
+        let usingCustomAudio = false;
         let typingTimeout;
         let synth, melodyLoop;
 
-        // 2. MUSIK LATAR OTOMATIS (MELODI SELAMAT ULANG TAHUN DENGAN TONE.JS)
-        function initMusic() {
+        // 2. MUSIK LATAR OTOMATIS (PRIORITAS FILE musik.mp3, CADANGAN NADA TONE.JS)
+        function initFallbackSynth() {
+            if (synth) return;
             synth = new Tone.PolySynth(Tone.Synth, {
                 oscillator: { type: 'sine' },
                 envelope: { attack: 0.05, decay: 0.2, sustain: 0.4, release: 1.2 },
@@ -994,12 +999,13 @@
             melodyLoop.loopEnd = 13.5;
         }
 
-        async function startMusic() {
+        async function startFallbackMusic() {
             try {
                 await Tone.start();
-                if (!synth) initMusic();
+                initFallbackSynth();
                 Tone.Transport.start();
                 melodyLoop.start(0);
+                usingCustomAudio = false;
                 isMusicPlaying = true;
                 updateMusicButton();
             } catch (e) {
@@ -1007,7 +1013,37 @@
             }
         }
 
+        async function startMusic() {
+            const audioEl = document.getElementById('bg-music');
+            if (audioEl) {
+                try {
+                    audioEl.volume = 0.85;
+                    await audioEl.play();
+                    usingCustomAudio = true;
+                    isMusicPlaying = true;
+                    updateMusicButton();
+                    return;
+                } catch (err) {
+                    console.log('Fallback ke musik bawaan:', err);
+                }
+            }
+            startFallbackMusic();
+        }
+
         function toggleMusic() {
+            const audioEl = document.getElementById('bg-music');
+            if (usingCustomAudio && audioEl) {
+                if (isMusicPlaying) {
+                    audioEl.pause();
+                    isMusicPlaying = false;
+                } else {
+                    audioEl.play();
+                    isMusicPlaying = true;
+                }
+                updateMusicButton();
+                return;
+            }
+
             if (!synth) {
                 startMusic();
                 return;
