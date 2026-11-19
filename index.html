@@ -12,6 +12,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <!-- Canvas Confetti untuk Efek Perayaan -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- MathJax untuk Render Rumus Matematika & Simbol Logika -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            startup: {
+                typeset: true
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 
     <style>
         body {
@@ -53,15 +66,6 @@
             50% { opacity: 1; transform: scale(1.4); }
         }
 
-        /* Animasi Denyut pada Amplop Pembuka */
-        .pulse-gentle {
-            animation: pulseGentle 2s infinite;
-        }
-        @keyframes pulseGentle {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.06); }
-        }
-
         /* Kursor Efek Mengetik */
         .typing-cursor::after {
             content: '|';
@@ -94,10 +98,10 @@
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
         .gallery-scroll-container::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Edge */
+            display: none;
         }
         .gallery-slide-item {
             flex: 0 0 78% !important;
@@ -117,11 +121,6 @@
             .gallery-slide-item {
                 flex: 0 0 34% !important;
                 width: 34% !important;
-            }
-        }
-        @media (min-width: 1024px) {
-            .gallery-slide-item {
-                flex: 0 0 34%;
             }
         }
 
@@ -151,17 +150,17 @@
 
         /* Animasi Pop-In */
         .animate-pop {
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: popIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
         @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.85) translateY(15px); }
+            0% { opacity: 0; transform: scale(0.88) translateY(14px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* Animasi & Efek 3D Amplop Pembuka (Latar Belakang Pink Lembut) */
+        /* Animasi & Efek 3D Amplop Pembuka */
         .opening-pink-bg {
             background: linear-gradient(135deg, #ffd1dc 0%, #ff9eb5 45%, #f472b6 100%);
-            background-image: 
+            background-image:
                 radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.45) 0%, rgba(244, 114, 182, 0.25) 65%),
                 radial-gradient(rgba(255, 255, 255, 0.35) 1.5px, transparent 1.5px),
                 linear-gradient(135deg, #ffe4e6 0%, #fbcfe8 50%, #f9a8d4 100%);
@@ -207,12 +206,12 @@
             animation: ringPulse 4.5s ease-out infinite;
         }
 
-        /* Efek Glassmorphism Lembut (Frosted Glass) */
+        /* Efek Glassmorphism Lembut */
         .glass-card {
-            background: rgba(255, 255, 255, 0.42);
+            background: rgba(255, 255, 255, 0.56);
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
-            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
             box-shadow: 0 20px 45px -10px rgba(225, 29, 72, 0.16), 0 8px 20px -6px rgba(255, 255, 255, 0.45) inset;
         }
 
@@ -342,17 +341,17 @@
     <!-- ========================================== -->
     <!-- 1. LAYAR PEMBUKA INTERAKTIF (AMPLOP 3D)     -->
     <!-- ========================================== -->
-    <div id="opening-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center opening-pink-bg p-5 text-center transition-opacity duration-700 overflow-hidden">
-        
+    <div id="opening-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center opening-pink-bg p-4 sm:p-5 text-center transition-opacity duration-700 overflow-hidden">
+
         <!-- Dekorasi Lingkaran Halus di Latar Belakang -->
         <div class="pointer-events-none absolute w-40 h-40 rounded-full border-4 border-white/40 bottom-16 left-1/2 -translate-x-1/4 bg-ring-deco"></div>
         <div class="pointer-events-none absolute w-24 h-24 rounded-full border-2 border-white/50 top-20 right-12"></div>
 
-        <!-- STEP 1: AMPLOP SIMPEL DENGAN ANIMASI 3D (SESUAI GAMBAR) -->
+        <!-- STEP 1: AMPLOP SIMPEL DENGAN ANIMASI 3D -->
         <div id="step-1-card" class="envelope-3d-stage flex flex-col items-center justify-center animate-pop">
             <div id="envelope-3d-box" onclick="goToStep2()" class="envelope-3d-wrapper relative w-64 sm:w-72 h-44 sm:h-48 cursor-pointer select-none group">
-                
-                <!-- Badan Amplop (SVG Berlapis untuk Warna Presisi Seperti Gambar) -->
+
+                <!-- Badan Amplop -->
                 <div class="relative w-full h-full rounded-2xl envelope-glow overflow-visible">
                     <svg viewBox="0 0 320 210" class="w-full h-full drop-shadow-xl overflow-visible">
                         <defs>
@@ -361,17 +360,14 @@
                             </clipPath>
                         </defs>
                         <g clip-path="url(#envClip)">
-                            <!-- Latar Dalam Amplop -->
                             <rect x="0" y="0" width="320" height="210" fill="#ffd9e2" />
-                            <!-- Lipatan Sisi Kiri & Kanan -->
                             <polygon points="0,0 160,115 0,210" fill="#ffe6ec" />
                             <polygon points="320,0 160,115 320,210" fill="#ffe6ec" />
-                            <!-- Lipatan Bawah -->
                             <polygon points="0,210 160,102 320,210" fill="#f9c2d1" />
                         </g>
                     </svg>
 
-                    <!-- Tutup Amplop Atas (Flap 3D yang bisa terbuka) -->
+                    <!-- Tutup Amplop Atas -->
                     <div class="envelope-flap-3d absolute top-0 left-0 w-full h-32 pointer-events-none z-10">
                         <svg viewBox="0 0 320 125" class="w-full h-full drop-shadow-md">
                             <path d="M 4,0 L 316,0 Q 320,0 317,4 L 165,112 Q 160,116 155,112 L 3,4 Q 0,0 4,0 Z" fill="#e61c5d" />
@@ -395,94 +391,136 @@
             </div>
         </div>
 
-        <!-- STEP 2: MINI MEMORY GAME (COCOKKAN PASANGAN EMOJI) -->
+        <!-- STEP 2: MINI MEMORY GAME -->
         <div id="step-2-game" class="hidden glass-card p-6 sm:p-7 rounded-3xl max-w-sm w-full">
             <div class="text-xs font-bold text-rose-600 uppercase tracking-wider mb-1">
                 💭 Memory Game
             </div>
             <h2 class="font-bold text-lg sm:text-xl text-slate-800 mb-1">
-                Cocokkan Pasangan Emoji² Ini! 😆
+                Cocokkan 6 Pasang Kenangan!
             </h2>
             <p class="text-xs text-slate-600 mb-4">
-                Selesaikan dulu untuk membuka pesan cinta &amp; galeri kenangan kita ❤️
+                Temukan pasangan kartu yang sama untuk membuka tantangan PIN rahasia.
             </p>
 
-            <!-- Grid Kartu Memory 4x3 (12 Kartu / 6 Pasang) -->
-            <div id="memory-grid" class="grid grid-cols-4 gap-2.5 sm:gap-3 mb-5">
-                <!-- Kartu di-generate otomatis lewat JavaScript -->
-            </div>
+            <div id="memory-grid" class="grid grid-cols-4 gap-2.5 mb-4"></div>
 
-            <!-- Tombol Lanjut (Muncul saat semua pasangan cocok) -->
-            <div id="game-complete-box" class="hidden animate-pop">
-                <p class="text-sm font-semibold text-rose-600 mb-3">
-                    Yeayy! Kamu berhasil mencocokkan semuanya! 🎉
+            <div id="game-complete-box" class="hidden bg-emerald-50/90 border border-emerald-200 rounded-2xl p-3.5 text-center animate-pop">
+                <p class="text-xs sm:text-sm font-bold text-emerald-700 mb-2.5">
+                    🎉 Keren! Semua pasangan cocok!
                 </p>
-                <button onclick="goToStep3Password()" class="w-full py-3.5 px-5 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold rounded-2xl shadow-lg shadow-rose-500/30 transform transition active:scale-95 flex items-center justify-center gap-2 text-base">
-                    <span>Lanjut ke Kata Sandi 🔐</span>
-                </button>
-            </div>
-
-            <!-- Tombol Bantuan Reset / Lewati Game -->
-            <div class="mt-4 flex justify-between items-center text-xs text-slate-500 border-t border-white/60 pt-3">
-                <button onclick="initMemoryGame()" class="hover:text-rose-600 font-medium transition">
-            <!-- Tombol Bantuan Reset Game -->
-            <div class="mt-4 flex justify-center items-center text-xs text-slate-500 border-t border-white/60 pt-3">
-                <button onclick="initMemoryGame()" class="hover:text-rose-600 font-medium transition">
-                    🔄 Acak Ulang
+                <button type="button" onclick="goToStep3Password()" class="w-full py-2.5 bg-gradient-to-r from-rose-500 to-pink-600 hover:opacity-95 text-white font-bold text-sm rounded-xl shadow-md transition active:scale-95">
+                    Lanjut ke Tantangan PIN 🔐
                 </button>
             </div>
         </div>
 
-        <!-- STEP 3: MASUKKAN PIN RAHASIA (JAWABAN: 972011) -->
-        <div id="step-3-password" class="hidden glass-card p-6 sm:p-7 rounded-3xl max-w-sm w-full">
-            <div class="w-14 h-14 mx-auto mb-2.5 rounded-2xl bg-white/80 border border-white flex items-center justify-center text-2xl shadow-sm animate-bounce">
-                🔐
-            </div>
-            <div class="text-xs font-bold text-rose-600 uppercase tracking-wider mb-0.5">
-                Tahap Terakhir
+        <!-- STEP 3: KARTU PIN RAHASIA -->
+        <div id="step-3-password" class="hidden relative glass-card p-5 sm:p-6 rounded-3xl max-w-sm w-full">
+            <div class="text-xs font-bold text-rose-600 uppercase tracking-wider mb-1">
+                🔐 Akses Rahasia Hummy
             </div>
             <h2 class="font-bold text-lg sm:text-xl text-slate-800 mb-1">
-                Masukkan PIN Cinta 💌
+                Masukkan PIN 6 Digit
             </h2>
-            <p class="text-xs text-slate-600 mb-4">
-                Tekan 6 digit angka PIN rahasia untuk membuka surat &amp; galeri kenangan kita!
+            <p class="text-xs text-slate-600 mb-3.5">
+                Klik tombol di bawah untuk memunculkan pop-up soal di atas kartu PIN!
             </p>
 
+            <!-- Tombol Pemicu Pop-Up Soal di Atas Kartu PIN -->
+            <button type="button" id="open-challenge-btn" onclick="toggleChallengePopup(true)" class="w-full mb-4 py-2.5 px-4 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold text-xs sm:text-sm shadow-md flex items-center justify-center gap-2 transition transform active:scale-95">
+                <span>🧠</span>
+                <span>Buka Pop-Up Soal Tantangan (3 Soal)</span>
+            </button>
+
             <!-- Indikator 6 Titik PIN -->
-            <div id="pin-dots-container" class="flex justify-center gap-2.5 mb-2">
-                <div class="pin-dot w-9 h-10 rounded-xl bg-white/80 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
-                <div class="pin-dot w-9 h-10 rounded-xl bg-white/80 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
-                <div class="pin-dot w-9 h-10 rounded-xl bg-white/80 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
-                <div class="pin-dot w-9 h-10 rounded-xl bg-white/80 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
-                <div class="pin-dot w-9 h-10 rounded-xl bg-white/80 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
-                <div class="pin-dot w-9 h-10 rounded-xl bg-white/80 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
+            <div id="pin-dots-container" class="flex justify-center gap-2 mb-2">
+                <div class="pin-dot w-9 h-10 sm:h-11 rounded-xl bg-white/85 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
+                <div class="pin-dot w-9 h-10 sm:h-11 rounded-xl bg-white/85 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
+                <div class="pin-dot w-9 h-10 sm:h-11 rounded-xl bg-white/85 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
+                <div class="pin-dot w-9 h-10 sm:h-11 rounded-xl bg-white/85 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
+                <div class="pin-dot w-9 h-10 sm:h-11 rounded-xl bg-white/85 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
+                <div class="pin-dot w-9 h-10 sm:h-11 rounded-xl bg-white/85 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
             </div>
 
             <p id="password-error-msg" class="hidden text-xs font-semibold text-rose-600 mb-2">
-                Ups, PIN-nya belum tepat sayang! Coba lagi ya 😘
+                Belum tepat sayang! Coba cek lagi perhitungan 3 soal di pop-up ya 😘
             </p>
 
             <!-- Keypad Tombol PIN Angka 0 - 9 -->
-            <div class="grid grid-cols-3 gap-2.5 max-w-[250px] mx-auto mt-3 mb-4 select-none">
-                <button type="button" onclick="pressPinDigit('1')" class="h-12 rounded-2xl bg-white/80 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">1</button>
-                <button type="button" onclick="pressPinDigit('2')" class="h-12 rounded-2xl bg-white/80 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">2</button>
-                <button type="button" onclick="pressPinDigit('3')" class="h-12 rounded-2xl bg-white/80 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">3</button>
-                <button type="button" onclick="pressPinDigit('4')" class="h-12 rounded-2xl bg-white/80 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">4</button>
-                <button type="button" onclick="pressPinDigit('5')" class="h-12 rounded-2xl bg-white/80 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">5</button>
-                <button type="button" onclick="pressPinDigit('6')" class="h-12 rounded-2xl bg-white/80 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">6</button>
-                <button type="button" onclick="pressPinDigit('7')" class="h-12 rounded-2xl bg-white/80 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">7</button>
-                <button type="button" onclick="pressPinDigit('8')" class="h-12 rounded-2xl bg-white/80 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">8</button>
-                <button type="button" onclick="pressPinDigit('9')" class="h-12 rounded-2xl bg-white/80 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">9</button>
-                <button type="button" onclick="clearPinDigits()" class="h-12 rounded-2xl bg-rose-100/80 hover:bg-rose-200/80 active:scale-90 border border-white font-bold text-xs text-rose-600 shadow-sm transition">Reset</button>
-                <button type="button" onclick="pressPinDigit('0')" class="h-12 rounded-2xl bg-white/80 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">0</button>
-                <button type="button" onclick="deletePinDigit()" class="h-12 rounded-2xl bg-rose-100/80 hover:bg-rose-200/80 active:scale-90 border border-white font-bold text-base text-rose-600 shadow-sm transition">⌫</button>
+            <div class="grid grid-cols-3 gap-2.5 max-w-[240px] mx-auto mt-3 mb-4 select-none">
+                <button type="button" onclick="pressPinDigit('1')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">1</button>
+                <button type="button" onclick="pressPinDigit('2')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">2</button>
+                <button type="button" onclick="pressPinDigit('3')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">3</button>
+                <button type="button" onclick="pressPinDigit('4')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">4</button>
+                <button type="button" onclick="pressPinDigit('5')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">5</button>
+                <button type="button" onclick="pressPinDigit('6')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">6</button>
+                <button type="button" onclick="pressPinDigit('7')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">7</button>
+                <button type="button" onclick="pressPinDigit('8')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">8</button>
+                <button type="button" onclick="pressPinDigit('9')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">9</button>
+                <button type="button" onclick="clearPinDigits()" class="h-12 rounded-2xl bg-rose-100/85 hover:bg-rose-200/85 active:scale-90 border border-white font-bold text-xs text-rose-600 shadow-sm transition">Reset</button>
+                <button type="button" onclick="pressPinDigit('0')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">0</button>
+                <button type="button" onclick="deletePinDigit()" class="h-12 rounded-2xl bg-rose-100/85 hover:bg-rose-200/85 active:scale-90 border border-white font-bold text-base text-rose-600 shadow-sm transition">⌫</button>
             </div>
 
-            <!-- Tombol Bantuan Isi Otomatis -->
+            <!-- Catatan Teks Bantuan -->
             <div class="pt-3 border-t border-white/60 flex justify-center items-center text-xs text-slate-500">
-                <button type="button" onclick="fillHintPassword()" class="hover:text-rose-600 font-medium transition">
-                    ✨ Lupa PIN? Klik Bantuan
-                </button>
+                <p class="font-medium">Nyerah Tanya Hubby aja</p>
+            </div>
+        </div>
+
+        <!-- POP-UP SOAL TANTANGAN MENGAMBANG DI ATAS KARTU PIN -->
+        <div id="challenge-popup" onclick="toggleChallengePopup(false)" class="hidden fixed inset-0 z-[75] bg-slate-950/65 backdrop-blur-sm flex items-center justify-center p-4">
+            <div onclick="event.stopPropagation()" class="bg-gradient-to-br from-rose-950 via-slate-900 to-rose-900 text-white rounded-3xl p-5 max-w-md w-full max-h-[84vh] overflow-y-auto text-left border border-rose-300/50 shadow-2xl animate-pop">
+                <div class="flex items-start justify-between gap-3 border-b border-white/15 pb-3 mb-3.5">
+                    <div>
+                        <span class="inline-block text-[10px] font-extrabold uppercase tracking-widest bg-amber-300 text-rose-950 px-2.5 py-0.5 rounded-full">
+                            🏆 Clash Challenge
+                        </span>
+                        <h3 class="font-bold text-base text-rose-100 mt-1.5">
+                            3 Soal Logika &amp; Numerik (6 Digit)
+                        </h3>
+                        <p class="text-[11px] text-rose-200/90 mt-0.5">
+                            Tiap soal menghasilkan 2 digit angka untuk disusun menjadi PIN.
+                        </p>
+                    </div>
+                    <button type="button" onclick="toggleChallengePopup(false)" aria-label="Tutup Soal" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white text-sm font-bold flex items-center justify-center transition shrink-0">
+                        ✕
+                    </button>
+                </div>
+
+                <div class="space-y-3 text-xs sm:text-sm leading-relaxed text-rose-50/95">
+                    <!-- Soal 1 -> 97 -->
+                    <div class="bg-white/10 rounded-2xl p-3.5 border border-white/10">
+                        <div class="font-bold text-amber-300 text-xs mb-1">Soal 1 • Pola Deret &amp; Operasi [2 Digit]</div>
+                        <p>
+                            Diketahui barisan: $19, 28, 39, 52, 67, \dots$ dengan selisih bertambah $+2$ tiap langkah ($+9, +11, +13, +15$). Ambil suku ke-6 lalu jumlahkan dengan $\frac{26}{2}$. Berapakah nilainya?
+                        </p>
+                    </div>
+
+                    <!-- Soal 2 -> 20 -->
+                    <div class="bg-white/10 rounded-2xl p-3.5 border border-white/10">
+                        <div class="font-bold text-amber-300 text-xs mb-1">Soal 2 • Sistem Logika Simbol [2 Digit]</div>
+                        <p>
+                            Jika $\triangle + \triangle + \triangle = 24$, $\square \times \triangle - 4 = 28$, dan $\bigcirc + \square = 15$, tentukan nilai dari $(\bigcirc + \triangle) + \square - 3$.
+                        </p>
+                    </div>
+
+                    <!-- Soal 3 -> 11 -->
+                    <div class="bg-white/10 rounded-2xl p-3.5 border border-white/10">
+                        <div class="font-bold text-amber-300 text-xs mb-1">Soal 3 • Penalaran Sifat Bilangan [2 Digit]</div>
+                        <p>
+                            Misalkan $X$ = bilangan prima genap, $Y$ = bilangan kuadrat sempurna antara $20$ dan $30$, serta $Z$ = jumlah seluruh faktor prima dari $30$. Hitung nilai dari $(Y - X) - Z - 2$.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-white/15 flex items-center justify-between gap-2 text-xs text-rose-200">
+                    <span>Urutan: [Soal 1][Soal 2][Soal 3]</span>
+                    <button type="button" onclick="toggleChallengePopup(false)" class="px-3.5 py-1.5 rounded-xl bg-amber-300 hover:bg-amber-200 text-rose-950 font-bold transition">
+                        Isi PIN Sekarang
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -513,48 +551,36 @@
             </p>
         </header>
 
-        <!-- Kartu Pesan Cinta (Efek Mengetik + Glassmorphism + Animasi Lucu 3D) -->
+        <!-- Kartu Pesan Cinta -->
         <section class="letter-3d-wrapper mb-12">
             <div id="letter-card-3d" class="letter-3d-card glass-card rounded-3xl p-6 sm:p-10 relative overflow-visible">
                 <div class="absolute -top-4 -right-3 text-5xl opacity-25 pointer-events-none select-none">💖</div>
 
-                <!-- Lingkaran Stiker Panda Lucu Pegang Bunga Mawar (Seperti Gambar) -->
+                <!-- Lingkaran Stiker Panda Lucu Pegang Bunga Mawar -->
                 <div class="flex flex-col items-center text-center mb-6 border-b border-white/60 pb-5">
                     <div onclick="triggerLoveExplosion()" title="Klik aku! 🐼🌹" class="panda-sticker-badge cursor-pointer w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-white/90 p-1.5 border-[3px] border-white flex items-center justify-center mb-3 relative group">
                         <div class="w-full h-full rounded-full bg-gradient-to-b from-slate-100 to-rose-50 overflow-hidden flex items-end justify-center border border-rose-200/70">
-                            <!-- Ilustrasi SVG Panda Chibi Pegang Mawar -->
                             <svg viewBox="0 0 140 140" class="w-full h-full">
-                                <!-- Telinga Panda -->
                                 <circle cx="38" cy="36" r="14" fill="#3b2322" />
                                 <circle cx="102" cy="36" r="14" fill="#3b2322" />
-                                <!-- Badan Panda -->
                                 <path d="M 35,140 C 35,105 105,105 105,140 Z" fill="#ffffff" stroke="#3b2322" stroke-width="3.5" />
-                                <!-- Dasi Kupu-kupu Cokelat -->
                                 <path d="M 70,113 L 61,108 Q 58,113 61,118 Z M 70,113 L 79,108 Q 82,113 79,118 Z" fill="#4a2c2a" />
                                 <circle cx="70" cy="113" r="3" fill="#3b2322" />
-                                <!-- Kepala Panda Chibi -->
                                 <rect x="28" y="32" width="84" height="72" rx="36" ry="34" fill="#ffffff" stroke="#3b2322" stroke-width="3.5" />
-                                <!-- Pipi Merona -->
                                 <ellipse cx="43" cy="76" rx="9" ry="6.5" fill="#fda4af" opacity="0.75" />
                                 <ellipse cx="97" cy="76" rx="9" ry="6.5" fill="#fda4af" opacity="0.75" />
-                                <!-- Mata Berkedip Lucu -->
                                 <g class="panda-blink">
                                     <circle cx="49" cy="65" r="4.2" fill="#2d1a19" />
                                     <circle cx="47.8" cy="63.8" r="1.3" fill="#ffffff" />
                                     <circle cx="91" cy="65" r="4.2" fill="#2d1a19" />
                                     <circle cx="89.8" cy="63.8" r="1.3" fill="#ffffff" />
                                 </g>
-                                <!-- Mulut Kucing/Panda Imut -->
                                 <path d="M 65,71 Q 67.5,75 70,71 Q 72.5,75 75,71" fill="none" stroke="#3b2322" stroke-width="2.6" stroke-linecap="round" />
-                                <!-- Tangan Kanan Memegang Bunga Mawar -->
                                 <path d="M 94,124 Q 106,112 114,120 Q 118,128 104,134" fill="#ffffff" stroke="#3b2322" stroke-width="3.2" stroke-linecap="round" />
-                                <!-- Bunga Mawar Merah Bergoyang -->
                                 <g class="rose-sway">
-                                    <!-- Tangkai & Daun -->
                                     <path d="M 110,126 L 112,92" stroke="#16a34a" stroke-width="3" stroke-linecap="round" />
                                     <ellipse cx="106" cy="107" rx="5.5" ry="3" transform="rotate(-25 106 107)" fill="#22c55e" stroke="#15803d" stroke-width="1.5" />
                                     <ellipse cx="117" cy="103" rx="5.5" ry="3" transform="rotate(25 117 103)" fill="#22c55e" stroke="#15803d" stroke-width="1.5" />
-                                    <!-- Kelopak Mawar -->
                                     <circle cx="112" cy="85" r="11" fill="#f43f5e" stroke="#881337" stroke-width="2.2" />
                                     <path d="M 105,84 Q 112,78 119,84 Q 116,91 108,89 Q 107,83 114,83" fill="none" stroke="#ffe4e6" stroke-width="1.8" stroke-linecap="round" />
                                 </g>
@@ -564,15 +590,14 @@
                     </div>
 
                     <h2 class="font-bold text-xl sm:text-2xl text-slate-800 tracking-tight">
-                        Surat Kecil Untukmu, </h2>
-                    <p> <span class="font-romantic text-3xl text-rose-600">Hummy Ku</span> 🎂🎉
-                    </p>
+                        Surat Kecil Untukmu, <span class="font-romantic text-3xl text-rose-600">Hummy Ku</span> 🎂🎉
+                    </h2>
                     <p class="text-xs text-rose-600 font-medium mt-0.5">Dari suamimu yang selalu mencintaimu</p>
                 </div>
-                
+
                 <!-- Teks yang akan diketik otomatis oleh JavaScript -->
                 <div id="typewriter-text" class="text-slate-800 text-base sm:text-lg leading-relaxed min-h-[160px] whitespace-pre-line font-medium"></div>
-                
+
                 <div class="mt-6 pt-4 border-t border-white/60 flex justify-between items-center text-sm text-slate-600">
                     <span>Selamanya milikmu ❤️</span>
                     <button onclick="replayTyping()" class="text-rose-600 hover:text-rose-800 font-semibold text-xs underline">
@@ -591,17 +616,12 @@
                 <p class="text-slate-600 text-sm">Geser ke samping untuk melihat momen favoritku bersamamu 👉📸</p>
             </div>
 
-            <!-- Wrapper Galeri Scroll Samping dengan Tombol Navigasi -->
             <div class="relative group">
-                <!-- Tombol Geser Kiri (Tampil di Desktop/Tablet) -->
                 <button type="button" onclick="scrollGallery(-1)" aria-label="Geser Kiri" class="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white/90 hover:bg-white text-rose-600 shadow-lg border border-rose-200 absolute -left-3 top-1/2 -translate-y-1/2 z-30 transition transform hover:scale-110 active:scale-95">
                     ❮
                 </button>
 
-                <!-- Container Galeri Scroll Horizontal -->
                 <div id="gallery-carousel" class="gallery-scroll-container gap-5 sm:gap-6 py-4 px-3">
-                    
-                    <!-- Foto 1 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform -rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto1.JPG" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -610,7 +630,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu bikin jatuh cinta lagi</p>
                     </div>
 
-                    <!-- Foto 2 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto2.JPG" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -619,7 +638,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 3 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform -rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto3.jpg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -628,7 +646,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Terima kasih untuk segalanya</p>
                     </div>
 
-                    <!-- Foto 4 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto4.jpg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -637,7 +654,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 5 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform -rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto5.jpg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -646,7 +662,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 6 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto6.jpg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -655,7 +670,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 7 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform -rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto7.jpg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -664,7 +678,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 8 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto8.jpg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -673,7 +686,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 9 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform -rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto9.jpg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -682,7 +694,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 10 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto10.jpg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -691,7 +702,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 11 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform -rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto11.jpeg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -700,7 +710,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 12 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto12.jpeg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -709,7 +718,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 13 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform -rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto13.jpeg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -718,7 +726,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 14 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto14.jpeg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -727,7 +734,6 @@
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
 
-                    <!-- Foto 15 -->
                     <div onclick="openPhotoModal(this)" class="gallery-slide-item polaroid-card bg-white/95 backdrop-blur-sm p-3.5 pb-6 rounded-2xl shadow-lg border border-white cursor-pointer transform -rotate-1">
                         <div class="aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                             <img src="foto15.jpeg" alt="Momen Bahagia" class="w-full h-full object-cover">
@@ -735,10 +741,8 @@
                         <p class="font-romantic text-2xl text-center text-slate-700 font-semibold">Rumahku Adalah Kamu</p>
                         <p class="text-xs text-center text-slate-400 mt-1">Selalu Bersama insya Allah</p>
                     </div>
-
                 </div>
 
-                <!-- Tombol Geser Kanan (Tampil di Desktop/Tablet) -->
                 <button type="button" onclick="scrollGallery(1)" aria-label="Geser Kanan" class="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white/90 hover:bg-white text-rose-600 shadow-lg border border-rose-200 absolute -right-3 top-1/2 -translate-y-1/2 z-30 transition transform hover:scale-110 active:scale-95">
                     ❯
                 </button>
@@ -758,15 +762,10 @@
             <div class="flex flex-col items-center justify-center mb-6">
                 <div class="cake-stage-float w-48 sm:w-56 h-44 sm:h-48 flex items-center justify-center">
                     <svg viewBox="0 0 220 200" class="w-full h-full overflow-visible">
-                        <!-- Piring Kue -->
                         <ellipse cx="110" cy="176" rx="88" ry="14" fill="rgba(255,255,255,0.35)" />
                         <ellipse cx="110" cy="172" rx="76" ry="11" fill="#fff1f2" />
-
-                        <!-- Badan Kue Tar Bawah -->
                         <rect x="44" y="122" width="132" height="48" rx="14" fill="#ffe4e6" stroke="#fda4af" stroke-width="2.5" />
-                        <!-- Lapisan Krim Atas Kue -->
                         <path d="M 44,124 Q 56,142 68,124 Q 80,145 94,124 Q 108,140 122,124 Q 136,144 150,124 Q 163,138 176,124 L 176,112 Q 176,102 162,102 L 58,102 Q 44,102 44,112 Z" fill="#ffffff" />
-                        <!-- Hiasan Stroberi / Ceri -->
                         <circle cx="68" cy="112" r="6" fill="#e11d48" />
                         <circle cx="110" cy="108" r="6.5" fill="#e11d48" />
                         <circle cx="152" cy="112" r="6" fill="#e11d48" />
@@ -774,7 +773,6 @@
                         <circle cx="110" cy="148" r="4" fill="#fde047" />
                         <circle cx="131" cy="144" r="4" fill="#fb7185" />
 
-                        <!-- Lilin 1 (Kiri) -->
                         <g>
                             <rect x="74" y="72" width="12" height="32" rx="4" fill="#fda4af" stroke="#e11d48" stroke-width="1.5" />
                             <line x1="80" y1="65" x2="80" y2="72" stroke="#334155" stroke-width="2" stroke-linecap="round" />
@@ -785,7 +783,6 @@
                             <path id="smoke-1" d="M 80,62 Q 74,52 82,42" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" class="candle-smoke" />
                         </g>
 
-                        <!-- Lilin 2 (Tengah - Lebih Tinggi) -->
                         <g>
                             <rect x="103" y="62" width="14" height="42" rx="4" fill="#fbcfe8" stroke="#db2777" stroke-width="1.5" />
                             <line x1="110" y1="54" x2="110" y2="62" stroke="#334155" stroke-width="2" stroke-linecap="round" />
@@ -796,7 +793,6 @@
                             <path id="smoke-2" d="M 110,52 Q 116,40 108,30" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" class="candle-smoke" />
                         </g>
 
-                        <!-- Lilin 3 (Kanan) -->
                         <g>
                             <rect x="134" y="72" width="12" height="32" rx="4" fill="#fda4af" stroke="#e11d48" stroke-width="1.5" />
                             <line x1="140" y1="65" x2="140" y2="72" stroke="#334155" stroke-width="2" stroke-linecap="round" />
@@ -813,7 +809,6 @@
                     🕯️ Lilin sedang menyala... Make a wish dulu ya, Hummy!
                 </p>
 
-                <!-- Tombol Tiup Lilin Sekarang Juga -->
                 <button id="blow-candle-btn" type="button" onclick="blowOutCandleNow()" class="bg-amber-300 hover:bg-amber-200 text-rose-900 font-extrabold py-3.5 px-7 rounded-2xl shadow-lg shadow-rose-900/25 transform transition hover:scale-105 active:scale-95 flex items-center gap-2 text-sm sm:text-base">
                     <span>💨</span>
                     <span>Tiup Lilin Sekarang Juga</span>
@@ -822,7 +817,7 @@
 
             <div class="flex flex-wrap justify-center gap-4 pt-2 border-t border-white/25">
                 <button type="button" onclick="triggerGhostPrank()" class="bg-white text-rose-600 hover:bg-rose-50 font-bold py-3.5 px-7 rounded-2xl shadow-lg transform transition active:scale-95 flex items-center gap-2">
-                    <span>Kirim Peluk & Cium</span>
+                    <span>Kirim Peluk &amp; Cium</span>
                     <span>😘</span>
                 </button>
             </div>
@@ -856,7 +851,7 @@
             <h3 class="font-romantic text-3xl text-rose-600 font-bold mb-2">Voucher Spesial Ulang Tahun</h3>
             <p class="text-slate-600 text-sm mb-5 leading-relaxed">
                 Voucher ini berlaku untuk: <br>
-                <strong class="text-slate-800 text-base">"Makan Malam Romantis & Bebas Pilih Kado Apapun Hari Ini!"</strong>
+                <strong class="text-slate-800 text-base">"Makan Malam Romantis &amp; Bebas Pilih Kado Apapun Hari Ini!"</strong>
             </p>
             <div class="bg-rose-50 p-3 rounded-xl text-xs text-rose-600 font-medium mb-6">
                 *Tunjukkan layar ini ke suamimu untuk langsung dicairkan sekarang juga ❤️
@@ -872,7 +867,6 @@
     <!-- ========================================== -->
     <div id="ghost-prank-modal" onclick="closeGhostPrank()" class="fixed inset-0 z-[80] hidden bg-black/95 flex flex-col items-center justify-center p-4 text-center select-none overflow-hidden">
         <div id="ghost-prank-box" onclick="event.stopPropagation()" class="ghost-jumpscare-anim max-w-sm w-full flex flex-col items-center">
-            <!-- Ilustrasi SVG Hantu Seram Tapi Lucu -->
             <div class="w-60 h-60 sm:w-72 sm:h-72 drop-shadow-[0_0_35px_rgba(239,68,68,0.85)] mb-3">
                 <svg viewBox="0 0 240 240" class="w-full h-full overflow-visible">
                     <defs>
@@ -887,31 +881,22 @@
                             <stop offset="100%" stop-color="#7f1d1d" />
                         </radialGradient>
                     </defs>
-                    <!-- Aura Gelap di Belakang Hantu -->
                     <circle cx="120" cy="115" r="95" fill="rgba(220, 38, 38, 0.22)" />
-                    <!-- Badan Hantu Melayang -->
                     <path d="M 48,195 Q 45,110 62,68 C 78,26 162,26 178,68 C 195,110 192,195 192,195 L 168,176 L 146,198 L 120,175 L 94,198 L 72,176 Z" fill="url(#ghostBodyGrad)" stroke="#1e293b" stroke-width="3" />
-                    <!-- Rambut Panjang Kusut -->
                     <path d="M 60,74 Q 44,125 52,175 M 180,74 Q 196,125 188,175 M 72,50 Q 56,95 62,155 M 168,50 Q 184,95 178,155" stroke="#0f172a" stroke-width="6" stroke-linecap="round" fill="none" />
-                    <!-- Lingkaran Hitam Mata -->
                     <ellipse cx="92" cy="96" rx="20" ry="24" fill="#090d16" />
                     <ellipse cx="148" cy="96" rx="20" ry="24" fill="#090d16" />
-                    <!-- Bola Mata Merah Menyala -->
                     <circle cx="92" cy="98" r="9" fill="url(#redEyeGlow)" />
                     <circle cx="148" cy="98" r="9" fill="url(#redEyeGlow)" />
                     <circle cx="92" cy="98" r="3" fill="#000000" />
                     <circle cx="148" cy="98" r="3" fill="#000000" />
-                    <!-- Alis Menukik Seram -->
                     <path d="M 70,74 L 108,86 M 170,74 L 132,86" stroke="#090d16" stroke-width="5" stroke-linecap="round" />
-                    <!-- Mulut Menganga Teriak -->
                     <ellipse cx="120" cy="144" rx="24" ry="30" fill="#090d16" stroke="#334155" stroke-width="3" />
-                    <!-- Gigi-gigi Tajam -->
                     <polygon points="103,121 109,132 115,120" fill="#f1f5f9" />
                     <polygon points="116,119 121,131 126,119" fill="#f1f5f9" />
                     <polygon points="127,120 133,132 138,121" fill="#f1f5f9" />
                     <polygon points="106,167 112,156 118,168" fill="#f1f5f9" />
                     <polygon points="122,168 128,156 134,167" fill="#f1f5f9" />
-                    <!-- Tangan Hantu Menggapai -->
                     <path d="M 52,135 Q 24,118 28,96 Q 35,90 40,104 Q 45,88 52,102 Q 58,92 60,112" fill="#cbd5e1" stroke="#1e293b" stroke-width="2.5" />
                     <path d="M 188,135 Q 216,118 212,96 Q 205,90 200,104 Q 195,88 188,102 Q 182,92 180,112" fill="#cbd5e1" stroke="#1e293b" stroke-width="2.5" />
                 </svg>
@@ -935,7 +920,6 @@
     <!-- 5. JAVASCRIPT (LOGIKA, MUSIK & ANIMASI)    -->
     <!-- ========================================== -->
     <script>
-        // 1. KONFIGURASI PESAN CINTA KHUSUS UNTUK HUMMY
         const loveMessageBlocks = [
             { text: "❤️ BARAKALLAH FII UMRIK HUMMY KU ❤️\n\n", className: "font-bold text-rose-600 text-lg sm:text-xl tracking-wide" },
             { text: "بارك الله في عمرك\n\n", className: "font-bold text-2xl sm:text-3xl text-rose-700 leading-loose" },
@@ -953,7 +937,6 @@
         let typingTimeout;
         let synth, melodyLoop;
 
-        // 2. MUSIK LATAR OTOMATIS (PRIORITAS FILE musik.mp3, CADANGAN NADA TONE.JS)
         function initFallbackSynth() {
             if (synth) return;
             synth = new Tone.PolySynth(Tone.Synth, {
@@ -1072,7 +1055,6 @@
             }
         }
 
-        // 3. ANIMASI HATI & GLITTER MELAYANG DI SEMUA SCENE
         function createFloatingHearts() {
             const container = document.getElementById('hearts-bg');
             if (!container) return;
@@ -1103,7 +1085,8 @@
             }
         }
 
-        // Efek 3D Tilt pada Amplop Pembuka & Kartu Surat
+        let isOpeningEnvelope = false;
+
         function init3DTiltEffects() {
             const envBox = document.getElementById('envelope-3d-box');
             if (envBox) {
@@ -1136,37 +1119,17 @@
             }
         }
 
-        // 4. LOGIKA PEMBUKA & MINI MEMORY GAME (MENGGUNAKAN IKON SVG AGAR TIDAK KOTAK DI SEMUA HP/PC)
         const gameIcons = [
-            {
-                id: 'cake',
-                svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><rect x="12" y="34" width="40" height="20" rx="5" fill="#f43f5e"/><path d="M12 38 Q22 44 32 38 Q42 44 52 38 L52 34 L12 34 Z" fill="#fff1f2"/><rect x="18" y="22" width="28" height="12" rx="4" fill="#fb7185"/><rect x="30" y="12" width="4" height="10" rx="1" fill="#fde047"/><path d="M32 4 C29 8 29 11 32 12 C35 11 35 8 32 4 Z" fill="#f97316"/></svg>`
-            },
-            {
-                id: 'heart',
-                svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><path d="M32 54 C32 54 8 38 8 21 C8 13 14 8 21 8 C26 8 30 11 32 15 C34 11 38 8 43 8 C50 8 56 13 56 21 C56 38 32 54 32 54 Z" fill="#e11d48"/><path d="M16 17 C16 14 19 12 22 12" stroke="#fda4af" stroke-width="3" stroke-linecap="round" fill="none"/></svg>`
-            },
-            {
-                id: 'gift',
-                svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><rect x="12" y="26" width="40" height="28" rx="4" fill="#fb7185"/><rect x="9" y="18" width="46" height="9" rx="3" fill="#f43f5e"/><rect x="29" y="18" width="6" height="36" fill="#fde047"/><path d="M32 18 C24 8 15 12 20 18 Z M32 18 C40 8 49 12 44 18 Z" fill="#facc15"/></svg>`
-            },
-            {
-                id: 'crown',
-                svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><path d="M10 46 L14 20 L26 32 L32 16 L38 32 L50 20 L54 46 Z" fill="#facc15" stroke="#eab308" stroke-width="2" stroke-linejoin="round"/><rect x="10" y="46" width="44" height="6" rx="3" fill="#eab308"/><circle cx="32" cy="13" r="3" fill="#f43f5e"/><circle cx="14" cy="17" r="2.5" fill="#f43f5e"/><circle cx="50" cy="17" r="2.5" fill="#f43f5e"/></svg>`
-            },
-            {
-                id: 'rose',
-                svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><path d="M32 32 L32 56" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/><ellipse cx="25" cy="44" rx="6" ry="3.5" transform="rotate(-25 25 44)" fill="#22c55e"/><ellipse cx="39" cy="41" rx="6" ry="3.5" transform="rotate(25 39 41)" fill="#22c55e"/><circle cx="32" cy="22" r="13" fill="#e11d48"/><path d="M25 21 Q32 14 39 21 Q36 29 28 27 Q27 20 34 20" fill="none" stroke="#ffe4e6" stroke-width="2.2" stroke-linecap="round"/></svg>`
-            },
-            {
-                id: 'ring',
-                svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><circle cx="32" cy="38" r="15" fill="none" stroke="#facc15" stroke-width="5"/><polygon points="24,18 32,10 40,18 32,25" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5"/></svg>`
-            }
+            { id: 'cake', svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><rect x="12" y="34" width="40" height="20" rx="5" fill="#f43f5e"/><path d="M12 38 Q22 44 32 38 Q42 44 52 38 L52 34 L12 34 Z" fill="#fff1f2"/><rect x="18" y="22" width="28" height="12" rx="4" fill="#fb7185"/><rect x="30" y="12" width="4" height="10" rx="1" fill="#fde047"/><path d="M32 4 C29 8 29 11 32 12 C35 11 35 8 32 4 Z" fill="#f97316"/></svg>` },
+            { id: 'heart', svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><path d="M32 54 C32 54 8 38 8 21 C8 13 14 8 21 8 C26 8 30 11 32 15 C34 11 38 8 43 8 C50 8 56 13 56 21 C56 38 32 54 32 54 Z" fill="#e11d48"/><path d="M16 17 C16 14 19 12 22 12" stroke="#fda4af" stroke-width="3" stroke-linecap="round" fill="none"/></svg>` },
+            { id: 'gift', svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><rect x="12" y="26" width="40" height="28" rx="4" fill="#fb7185"/><rect x="9" y="18" width="46" height="9" rx="3" fill="#f43f5e"/><rect x="29" y="18" width="6" height="36" fill="#fde047"/><path d="M32 18 C24 8 15 12 20 18 Z M32 18 C40 8 49 12 44 18 Z" fill="#facc15"/></svg>` },
+            { id: 'crown', svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><path d="M10 46 L14 20 L26 32 L32 16 L38 32 L50 20 L54 46 Z" fill="#facc15" stroke="#eab308" stroke-width="2" stroke-linejoin="round"/><rect x="10" y="46" width="44" height="6" rx="3" fill="#eab308"/><circle cx="32" cy="13" r="3" fill="#f43f5e"/><circle cx="14" cy="17" r="2.5" fill="#f43f5e"/><circle cx="50" cy="17" r="2.5" fill="#f43f5e"/></svg>` },
+            { id: 'rose', svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><path d="M32 32 L32 56" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/><ellipse cx="25" cy="44" rx="6" ry="3.5" transform="rotate(-25 25 44)" fill="#22c55e"/><ellipse cx="39" cy="41" rx="6" ry="3.5" transform="rotate(25 39 41)" fill="#22c55e"/><circle cx="32" cy="22" r="13" fill="#e11d48"/><path d="M25 21 Q32 14 39 21 Q36 29 28 27 Q27 20 34 20" fill="none" stroke="#ffe4e6" stroke-width="2.2" stroke-linecap="round"/></svg>` },
+            { id: 'ring', svg: `<svg viewBox="0 0 64 64" class="w-9 h-9 sm:w-11 sm:h-11"><circle cx="32" cy="38" r="15" fill="none" stroke="#facc15" stroke-width="5"/><polygon points="24,18 32,10 40,18 32,25" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5"/></svg>` }
         ];
         let flippedCards = [];
         let matchedPairs = 0;
         let isBoardLocked = false;
-        let isOpeningEnvelope = false;
 
         function initMemoryGame() {
             const grid = document.getElementById('memory-grid');
@@ -1177,7 +1140,6 @@
             isBoardLocked = false;
             document.getElementById('game-complete-box').classList.add('hidden');
 
-            // Gandakan dan acak kartu ikon (6 pasang = 12 kartu)
             const deck = [...gameIcons, ...gameIcons].sort(() => Math.random() - 0.5);
 
             deck.forEach((item) => {
@@ -1187,11 +1149,9 @@
 
                 card.innerHTML = `
                     <div class="memory-inner relative w-full h-full">
-                        <!-- Sisi Depan (Tertutup) -->
                         <div class="memory-front absolute inset-0 bg-gradient-to-br from-rose-400 to-pink-500 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-sm border border-rose-300">
                             ?
                         </div>
-                        <!-- Sisi Belakang (Ikon SVG) -->
                         <div class="memory-back absolute inset-0 bg-rose-50 rounded-xl flex items-center justify-center shadow-inner border-2 border-rose-300 p-1.5">
                             ${item.svg}
                         </div>
@@ -1270,10 +1230,25 @@
             document.getElementById('step-2-game').classList.add('hidden');
             document.getElementById('step-3-password').classList.remove('hidden');
             document.getElementById('step-3-password').classList.add('animate-pop');
+            toggleChallengePopup(false);
             clearPinDigits();
         }
 
-        // Logika Tombol PIN Angka (Jawaban: 972011)
+        function toggleChallengePopup(forceState) {
+            const popup = document.getElementById('challenge-popup');
+            if (!popup) return;
+
+            const shouldShow = typeof forceState === 'boolean' ? forceState : popup.classList.contains('hidden');
+            if (shouldShow) {
+                popup.classList.remove('hidden');
+                if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+                    window.MathJax.typesetPromise([popup]).catch(() => {});
+                }
+            } else {
+                popup.classList.add('hidden');
+            }
+        }
+
         const SECRET_PIN = '972011';
         let currentPin = '';
         let isPinChecking = false;
@@ -1284,11 +1259,11 @@
                 if (idx < currentPin.length) {
                     dot.textContent = currentPin[idx];
                     dot.classList.add('bg-rose-500', 'text-white', 'border-rose-300', 'scale-105');
-                    dot.classList.remove('bg-white/80', 'text-rose-600', 'border-white');
+                    dot.classList.remove('bg-white/85', 'text-rose-600', 'border-white');
                 } else {
                     dot.textContent = '';
                     dot.classList.remove('bg-rose-500', 'text-white', 'border-rose-300', 'scale-105', 'bg-emerald-500', 'border-emerald-300');
-                    dot.classList.add('bg-white/80', 'text-rose-600', 'border-white');
+                    dot.classList.add('bg-white/85', 'text-rose-600', 'border-white');
                 }
             });
         }
@@ -1346,13 +1321,6 @@
             }
         }
 
-        function fillHintPassword() {
-            if (isPinChecking) return;
-            currentPin = SECRET_PIN;
-            renderPinDots();
-            verifyPinCode();
-        }
-
         function startSurprise() {
             startMusic();
             const openingScreen = document.getElementById('opening-screen');
@@ -1370,7 +1338,6 @@
             }, 600);
         }
 
-        // 5. EFEK MENGETIK PESAN (TYPEWRITER DENGAN FORMAT TEBAL, MIRING & ARAB)
         function startTypewriter() {
             const target = document.getElementById('typewriter-text');
             target.innerHTML = '';
@@ -1414,7 +1381,6 @@
             startTypewriter();
         }
 
-        // 6. EFEK KONFETI & INTERAKSI TOMBOL
         function fireConfetti() {
             if (typeof confetti !== 'function') return;
             confetti({
@@ -1446,7 +1412,6 @@
             }
         }
 
-        // 6B. ANIMASI TIUP LILIN & KEMBANG API SURPRISE
         let isCandleBlownOut = false;
         const fwCanvas = document.getElementById('fireworks-canvas');
         const fwCtx = fwCanvas ? fwCanvas.getContext('2d') : null;
@@ -1518,7 +1483,7 @@
                 } else {
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.vy += 0.07; // gravitasi kembang api
+                    p.vy += 0.07;
                     p.vx *= 0.985;
                     p.alpha -= p.decay;
 
@@ -1559,7 +1524,6 @@
             }
         }
 
-        // Efek Suara Tiupan Angin & Kembang Api (Menggunakan Tone.js)
         function playBlowWindSound() {
             try {
                 if (typeof Tone === 'undefined') return;
@@ -1606,7 +1570,6 @@
             try {
                 if (typeof Tone === 'undefined') return;
                 Tone.start();
-                // Dentuman ledakan rendah (Boom)
                 const boomSynth = new Tone.MembraneSynth({
                     pitchDecay: 0.08,
                     octaves: 5,
@@ -1616,7 +1579,6 @@
                 }).toDestination();
                 boomSynth.triggerAttackRelease('G1', '0.4');
 
-                // Suara gemerlap percikan kembang api (Crackle/Sparkle)
                 const crackleFilter = new Tone.Filter({ type: 'highpass', frequency: 1800 }).toDestination();
                 const crackleNoise = new Tone.NoiseSynth({
                     noise: { type: 'white' },
@@ -1683,7 +1645,6 @@
             }
         }
 
-        // 7. MODAL LIGHTBOX FOTO & VOUCHER
         function scrollGallery(direction) {
             const carousel = document.getElementById('gallery-carousel');
             if (!carousel) return;
@@ -1718,7 +1679,6 @@
             document.getElementById('wish-modal').classList.add('hidden');
         }
 
-        // 7B. PRANK POP-UP GAMBAR HANTU KAGET + EFEK SUARA KEJUTAN
         function playSpookyScareSound() {
             try {
                 if (typeof Tone === 'undefined') return;
@@ -1730,7 +1690,6 @@
                 }).toDestination();
 
                 const now = Tone.now();
-                // Akor disonan mengejutkan
                 scareSynth.triggerAttackRelease(['C2', 'F#2', 'C3', 'Eb4', 'A4'], '0.55', now);
                 setTimeout(() => {
                     scareSynth.dispose();
@@ -1745,7 +1704,6 @@
             const box = document.getElementById('ghost-prank-box');
             if (!modal || !box) return;
 
-            // Getarkan HP jika mendukung fitur getar
             if (navigator.vibrate) {
                 navigator.vibrate([180, 70, 240]);
             }
@@ -1755,7 +1713,7 @@
             modal.classList.remove('hidden');
             modal.classList.remove('screen-jumpscare-shake');
             box.classList.remove('ghost-jumpscare-anim');
-            void modal.offsetWidth; // reset animasi
+            void modal.offsetWidth;
             modal.classList.add('screen-jumpscare-shake');
             box.classList.add('ghost-jumpscare-anim');
         }
@@ -1768,7 +1726,6 @@
             triggerLoveExplosion();
         }
 
-        // Jalankan animasi latar & 3D tilt saat halaman dimuat
         window.addEventListener('DOMContentLoaded', () => {
             createFloatingHearts();
             init3DTiltEffects();
