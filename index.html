@@ -423,14 +423,14 @@
             <h2 class="font-bold text-lg sm:text-xl text-slate-800 mb-1">
                 Masukkan PIN 6 Digit
             </h2>
-            <p class="text-xs text-slate-600 mb-3.5">
-                Klik tombol di bawah untuk memunculkan pop-up soal di atas kartu PIN!
+            <p id="pin-status-subtitle" class="text-xs text-slate-600 mb-3.5">
+                🔒 Tombol PIN terkunci! Selesaikan dulu 3 soal tantangan di bawah ini.
             </p>
 
             <!-- Tombol Pemicu Pop-Up Soal di Atas Kartu PIN -->
             <button type="button" id="open-challenge-btn" onclick="toggleChallengePopup(true)" class="w-full mb-4 py-2.5 px-4 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold text-xs sm:text-sm shadow-md flex items-center justify-center gap-2 transition transform active:scale-95">
                 <span>🧠</span>
-                <span>Buka Pop-Up Soal Tantangan (3 Soal)</span>
+                <span id="open-challenge-btn-text">Kerjakan 3 Soal Tantangan Dulu</span>
             </button>
 
             <!-- Indikator 6 Titik PIN -->
@@ -443,12 +443,16 @@
                 <div class="pin-dot w-9 h-10 sm:h-11 rounded-xl bg-white/85 border-2 border-white flex items-center justify-center font-bold text-lg text-rose-600 shadow-inner transition-all"></div>
             </div>
 
+            <p id="pin-locked-warning" class="text-[11px] font-semibold text-amber-700 bg-amber-100/90 border border-amber-300 rounded-xl py-1.5 px-2.5 mb-2">
+                🔒 Selesaikan &amp; benarkan semua jawaban soal di pop-up agar keypad PIN terbuka!
+            </p>
+
             <p id="password-error-msg" class="hidden text-xs font-semibold text-rose-600 mb-2">
                 Belum tepat sayang! Coba cek lagi perhitungan 3 soal di pop-up ya 😘
             </p>
 
-            <!-- Keypad Tombol PIN Angka 0 - 9 -->
-            <div class="grid grid-cols-3 gap-2.5 max-w-[240px] mx-auto mt-3 mb-4 select-none">
+            <!-- Keypad Tombol PIN Angka 0 - 9 (Terkunci Sebelum Tantangan Selesai) -->
+            <div id="pin-keypad-grid" class="relative grid grid-cols-3 gap-2.5 max-w-[240px] mx-auto mt-3 mb-4 select-none opacity-45 pointer-events-none transition-opacity duration-300">
                 <button type="button" onclick="pressPinDigit('1')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">1</button>
                 <button type="button" onclick="pressPinDigit('2')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">2</button>
                 <button type="button" onclick="pressPinDigit('3')" class="h-12 rounded-2xl bg-white/85 hover:bg-white active:scale-90 border border-white font-bold text-lg text-slate-800 shadow-sm transition">3</button>
@@ -471,17 +475,17 @@
 
         <!-- POP-UP SOAL TANTANGAN MENGAMBANG DI ATAS KARTU PIN -->
         <div id="challenge-popup" onclick="toggleChallengePopup(false)" class="hidden fixed inset-0 z-[75] bg-slate-950/65 backdrop-blur-sm flex items-center justify-center p-4">
-            <div onclick="event.stopPropagation()" class="bg-gradient-to-br from-rose-950 via-slate-900 to-rose-900 text-white rounded-3xl p-5 max-w-md w-full max-h-[84vh] overflow-y-auto text-left border border-rose-300/50 shadow-2xl animate-pop">
+            <div onclick="event.stopPropagation()" class="bg-gradient-to-br from-rose-950 via-slate-900 to-rose-900 text-white rounded-3xl p-5 max-w-md w-full max-h-[86vh] overflow-y-auto text-left border border-rose-300/50 shadow-2xl animate-pop">
                 <div class="flex items-start justify-between gap-3 border-b border-white/15 pb-3 mb-3.5">
                     <div>
                         <span class="inline-block text-[10px] font-extrabold uppercase tracking-widest bg-amber-300 text-rose-950 px-2.5 py-0.5 rounded-full">
                             🏆 Clash Challenge
                         </span>
                         <h3 class="font-bold text-base text-rose-100 mt-1.5">
-                            3 Soal Logika &amp; Numerik (6 Digit)
+                            Jawab 3 Soal untuk Membuka Keypad PIN
                         </h3>
                         <p class="text-[11px] text-rose-200/90 mt-0.5">
-                            Tiap soal menghasilkan 2 digit angka untuk disusun menjadi PIN.
+                            Isi jawaban 2 digit di setiap kotak soal, lalu klik tombol cek jawaban.
                         </p>
                     </div>
                     <button type="button" onclick="toggleChallengePopup(false)" aria-label="Tutup Soal" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white text-sm font-bold flex items-center justify-center transition shrink-0">
@@ -491,34 +495,58 @@
 
                 <div class="space-y-3 text-xs sm:text-sm leading-relaxed text-rose-50/95">
                     <!-- Soal 1 -> 97 -->
-                    <div class="bg-white/10 rounded-2xl p-3.5 border border-white/10">
-                        <div class="font-bold text-amber-300 text-xs mb-1">Soal 1 • Pola Deret &amp; Operasi [2 Digit]</div>
-                        <p>
+                    <div id="q1-card" class="bg-white/10 rounded-2xl p-3.5 border border-white/15 transition-colors">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <span class="font-bold text-amber-300 text-xs">Soal 1 • Pola Deret &amp; Operasi [2 Digit]</span>
+                            <span id="q1-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/15 text-rose-200">Belum terjawab</span>
+                        </div>
+                        <p class="mb-2.5">
                             Diketahui barisan: $19, 28, 39, 52, 67, \dots$ dengan selisih bertambah $+2$ tiap langkah ($+9, +11, +13, +15$). Ambil suku ke-6 lalu jumlahkan dengan $\frac{26}{2}$. Berapakah nilainya?
                         </p>
+                        <div class="flex items-center gap-2">
+                            <label for="ans-q1" class="text-xs font-semibold text-rose-200 shrink-0">Jawaban 1:</label>
+                            <input id="ans-q1" type="number" inputmode="numeric" placeholder="2 digit" onkeydown="if(event.key==='Enter') checkAllChallengeAnswers()" class="w-full px-3 py-1.5 rounded-xl bg-slate-950/70 border border-rose-300/40 text-white font-bold text-sm focus:outline-none focus:border-amber-300" />
+                        </div>
                     </div>
 
                     <!-- Soal 2 -> 20 -->
-                    <div class="bg-white/10 rounded-2xl p-3.5 border border-white/10">
-                        <div class="font-bold text-amber-300 text-xs mb-1">Soal 2 • Sistem Logika Simbol [2 Digit]</div>
-                        <p>
+                    <div id="q2-card" class="bg-white/10 rounded-2xl p-3.5 border border-white/15 transition-colors">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <span class="font-bold text-amber-300 text-xs">Soal 2 • Sistem Logika Simbol [2 Digit]</span>
+                            <span id="q2-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/15 text-rose-200">Belum terjawab</span>
+                        </div>
+                        <p class="mb-2.5">
                             Jika $\triangle + \triangle + \triangle = 24$, $\square \times \triangle - 4 = 28$, dan $\bigcirc + \square = 15$, tentukan nilai dari $(\bigcirc + \triangle) + \square - 3$.
                         </p>
+                        <div class="flex items-center gap-2">
+                            <label for="ans-q2" class="text-xs font-semibold text-rose-200 shrink-0">Jawaban 2:</label>
+                            <input id="ans-q2" type="number" inputmode="numeric" placeholder="2 digit" onkeydown="if(event.key==='Enter') checkAllChallengeAnswers()" class="w-full px-3 py-1.5 rounded-xl bg-slate-950/70 border border-rose-300/40 text-white font-bold text-sm focus:outline-none focus:border-amber-300" />
+                        </div>
                     </div>
 
                     <!-- Soal 3 -> 11 -->
-                    <div class="bg-white/10 rounded-2xl p-3.5 border border-white/10">
-                        <div class="font-bold text-amber-300 text-xs mb-1">Soal 3 • Penalaran Sifat Bilangan [2 Digit]</div>
-                        <p>
+                    <div id="q3-card" class="bg-white/10 rounded-2xl p-3.5 border border-white/15 transition-colors">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <span class="font-bold text-amber-300 text-xs">Soal 3 • Penalaran Sifat Bilangan [2 Digit]</span>
+                            <span id="q3-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/15 text-rose-200">Belum terjawab</span>
+                        </div>
+                        <p class="mb-2.5">
                             Misalkan $X$ = bilangan prima genap, $Y$ = bilangan kuadrat sempurna antara $20$ dan $30$, serta $Z$ = jumlah seluruh faktor prima dari $30$. Hitung nilai dari $(Y - X) - Z - 2$.
                         </p>
+                        <div class="flex items-center gap-2">
+                            <label for="ans-q3" class="text-xs font-semibold text-rose-200 shrink-0">Jawaban 3:</label>
+                            <input id="ans-q3" type="number" inputmode="numeric" placeholder="2 digit" onkeydown="if(event.key==='Enter') checkAllChallengeAnswers()" class="w-full px-3 py-1.5 rounded-xl bg-slate-950/70 border border-rose-300/40 text-white font-bold text-sm focus:outline-none focus:border-amber-300" />
+                        </div>
                     </div>
                 </div>
 
-                <div class="mt-4 pt-3 border-t border-white/15 flex items-center justify-between gap-2 text-xs text-rose-200">
-                    <span>Urutan: [Soal 1][Soal 2][Soal 3]</span>
-                    <button type="button" onclick="toggleChallengePopup(false)" class="px-3.5 py-1.5 rounded-xl bg-amber-300 hover:bg-amber-200 text-rose-950 font-bold transition">
-                        Isi PIN Sekarang
+                <!-- Status Verifikasi Jawaban -->
+                <p id="challenge-feedback-msg" class="hidden mt-3 text-xs font-semibold rounded-xl px-3 py-2 text-center"></p>
+
+                <div class="mt-4 pt-3 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-rose-200">
+                    <span>Gabungkan: [Soal 1][Soal 2][Soal 3]</span>
+                    <button type="button" onclick="checkAllChallengeAnswers()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-amber-300 hover:bg-amber-200 text-rose-950 font-extrabold shadow-md transition active:scale-95">
+                        Cek Jawaban &amp; Buka Keypad PIN 🔓
                     </button>
                 </div>
             </div>
@@ -590,7 +618,7 @@
                     </div>
 
                     <h2 class="font-bold text-xl sm:text-2xl text-slate-800 tracking-tight">
-                        Surat Kecil Untukmu, <br><span class="font-romantic text-3xl text-rose-600">Hummy Ku</span> 🎂🎉 </br>
+                        Surat Kecil Untukmu, <br> <span class="font-romantic text-3xl text-rose-600">Hummy Ku</span> 🎂🎉 </br>
                     </h2>
                     <p class="text-xs text-rose-600 font-medium mt-0.5">Dari suamimu yang selalu mencintaimu</p>
                 </div>
@@ -1226,12 +1254,62 @@
             }
         }
 
+        let isChallengeSolved = false;
+        const CHALLENGE_ANSWERS = {
+            q1: '97',
+            q2: '20',
+            q3: '11'
+        };
+
         function goToStep3Password() {
             document.getElementById('step-2-game').classList.add('hidden');
             document.getElementById('step-3-password').classList.remove('hidden');
             document.getElementById('step-3-password').classList.add('animate-pop');
-            toggleChallengePopup(false);
+            lockPinKeypad();
             clearPinDigits();
+            toggleChallengePopup(true);
+        }
+
+        function lockPinKeypad() {
+            isChallengeSolved = false;
+            const keypad = document.getElementById('pin-keypad-grid');
+            const lockWarn = document.getElementById('pin-locked-warning');
+            const subEl = document.getElementById('pin-status-subtitle');
+            const btnText = document.getElementById('open-challenge-btn-text');
+
+            if (keypad) {
+                keypad.classList.add('opacity-45', 'pointer-events-none');
+            }
+            if (lockWarn) {
+                lockWarn.classList.remove('hidden');
+            }
+            if (subEl) {
+                subEl.textContent = '🔒 Tombol PIN terkunci! Selesaikan dulu 3 soal tantangan di bawah ini.';
+            }
+            if (btnText) {
+                btnText.textContent = 'Kerjakan 3 Soal Tantangan Dulu';
+            }
+        }
+
+        function unlockPinKeypad() {
+            isChallengeSolved = true;
+            const keypad = document.getElementById('pin-keypad-grid');
+            const lockWarn = document.getElementById('pin-locked-warning');
+            const subEl = document.getElementById('pin-status-subtitle');
+            const btnText = document.getElementById('open-challenge-btn-text');
+
+            if (keypad) {
+                keypad.classList.remove('opacity-45', 'pointer-events-none');
+            }
+            if (lockWarn) {
+                lockWarn.classList.add('hidden');
+            }
+            if (subEl) {
+                subEl.textContent = '🔓 Tantangan selesai! Masukkan 6 digit gabungan jawabanmu.';
+            }
+            if (btnText) {
+                btnText.textContent = '✅ Tantangan Terjawab (Lihat Lagi Soal)';
+            }
         }
 
         function toggleChallengePopup(forceState) {
@@ -1246,6 +1324,53 @@
                 }
             } else {
                 popup.classList.add('hidden');
+            }
+        }
+
+        function checkAllChallengeAnswers() {
+            const inputs = [
+                { key: 'q1', inputEl: document.getElementById('ans-q1'), cardEl: document.getElementById('q1-card'), badgeEl: document.getElementById('q1-badge') },
+                { key: 'q2', inputEl: document.getElementById('ans-q2'), cardEl: document.getElementById('q2-card'), badgeEl: document.getElementById('q2-badge') },
+                { key: 'q3', inputEl: document.getElementById('ans-q3'), cardEl: document.getElementById('q3-card'), badgeEl: document.getElementById('q3-badge') }
+            ];
+            const feedbackEl = document.getElementById('challenge-feedback-msg');
+            let allCorrect = true;
+
+            inputs.forEach(item => {
+                const val = (item.inputEl?.value || '').trim();
+                const isRight = val === CHALLENGE_ANSWERS[item.key];
+
+                if (isRight) {
+                    item.cardEl.classList.remove('border-white/15', 'border-rose-400', 'bg-rose-950/50');
+                    item.cardEl.classList.add('border-emerald-400', 'bg-emerald-950/40');
+                    item.badgeEl.textContent = '✅ Benar!';
+                    item.badgeEl.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-400 text-emerald-950';
+                } else {
+                    allCorrect = false;
+                    item.cardEl.classList.remove('border-white/15', 'border-emerald-400', 'bg-emerald-950/40');
+                    item.cardEl.classList.add('border-rose-400', 'bg-rose-950/50');
+                    item.badgeEl.textContent = val === '' ? '⚠️ Kosong' : '❌ Belum tepat';
+                    item.badgeEl.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500 text-white';
+                }
+            });
+
+            if (feedbackEl) {
+                feedbackEl.classList.remove('hidden');
+                if (allCorrect) {
+                    feedbackEl.textContent = '🎉 Hebat! Semua jawaban benar! Keypad PIN sekarang sudah terbuka.';
+                    feedbackEl.className = 'mt-3 text-xs font-bold rounded-xl px-3 py-2 text-center bg-emerald-400/20 border border-emerald-300 text-emerald-200';
+                } else {
+                    feedbackEl.textContent = 'Masih ada jawaban yang belum tepat sayang, cek kotak berwarna merah ya 😘';
+                    feedbackEl.className = 'mt-3 text-xs font-bold rounded-xl px-3 py-2 text-center bg-rose-500/25 border border-rose-400 text-rose-200';
+                }
+            }
+
+            if (allCorrect) {
+                unlockPinKeypad();
+                fireConfetti();
+                setTimeout(() => {
+                    toggleChallengePopup(false);
+                }, 750);
             }
         }
 
@@ -1269,6 +1394,10 @@
         }
 
         function pressPinDigit(digit) {
+            if (!isChallengeSolved) {
+                toggleChallengePopup(true);
+                return;
+            }
             if (isPinChecking || currentPin.length >= 6) return;
             document.getElementById('password-error-msg').classList.add('hidden');
             currentPin += digit;
@@ -1280,6 +1409,7 @@
         }
 
         function deletePinDigit() {
+            if (!isChallengeSolved) return;
             if (isPinChecking || currentPin.length === 0) return;
             currentPin = currentPin.slice(0, -1);
             renderPinDots();
